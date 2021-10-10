@@ -1,5 +1,5 @@
-openfaas_version=$(shell cat magiclantern/charts/openfaas/Chart.yaml  | yq  e '.dependencies[0].version' -)
-metrics_server_version=$(shell cat magiclantern/charts/metrics-server/Chart.yaml  | yq  e '.dependencies[0].version' -)
+openfaas_version=$(shell yq  e '.dependencies[0].version' magiclantern/charts/openfaas/Chart.yaml )
+metrics_server_version=$(shell yq  e '.dependencies[0].version' magiclantern/charts/metrics-server/Chart.yaml )
 
 install: openfaas-install metrics-server-install
 
