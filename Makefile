@@ -5,7 +5,7 @@ install: openfaas-install metrics-server-install
 
 uninstall: openfaas-remove metrics-server-remove
 
-all: kind install
+all: kind-registry install
 
 clean: unkind
 
@@ -16,6 +16,9 @@ kind:
 
 unkind:
 	kind delete cluster	
+
+kind-registry:
+	curl -sL https://kind.sigs.k8s.io/examples/kind-with-registry.sh | sh -
 
 # OpenFaaS
 magiclantern/charts/openfaas/charts/openfaas-$(openfaas_version).tgz:
