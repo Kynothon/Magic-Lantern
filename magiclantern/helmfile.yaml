@@ -1,0 +1,27 @@
+repositories:
+  - name: "faas-netes"
+    url: "https://openfaas.github.io/faas-netes/"
+  - name: "metrics-server"
+    url: "https://kubernetes-sigs.github.io/metrics-server"
+
+releases:
+  - name: "openfaas"
+    namespace: "openfaas"
+    createNamespace: true
+    chart: "faas-netes/openfaas"
+    values:
+      - "./values/openfaas.yaml"
+    hooks:
+      - events: ["prepare"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-k"
+          - "kustomize/openfaas/base"
+  - name: "metrics-server"
+    namespace: "kube-system"
+    chart: "metrics-server/metrics-server"
+    values:
+      - "./values/metrics-server.yaml"
+
