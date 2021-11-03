@@ -1,8 +1,10 @@
 repositories:
   - name: "faas-netes"
-    url: "https://openfaas.github.io/faas-netes/"
+    url: "https://openfaas.github.io/faas-netes"
   - name: "metrics-server"
     url: "https://kubernetes-sigs.github.io/metrics-server"
+  - name: "minio"
+    url: "https://operator.min.io"
 
 releases:
   - name: "openfaas"
@@ -19,9 +21,24 @@ releases:
           - "apply"
           - "-k"
           - "kustomize/openfaas/base"
+
   - name: "metrics-server"
     namespace: "kube-system"
     chart: "metrics-server/metrics-server"
     values:
       - "./values/metrics-server.yaml"
+
+  - name: "minio"
+    namespace: "minio-operator"
+    chart: "minio/minio-operator"
+    values:
+      - "./values/minio-tenant.yaml"
+    hooks:
+      - events: ["prepare"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-k"
+          - "kustomize/minio-tenant/base"
 
