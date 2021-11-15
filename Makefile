@@ -1,6 +1,8 @@
 all: kind-registry install
 
 clean: unkind
+	docker stop kind-registry
+	docker rm kind-registry
 
 # Cluster
 
