@@ -1,2 +1,10 @@
 functionNamespace: openfaas-fn
 generateBasicAuth: true
+gateway:
+ readTimeout: "20m"
+ writeTimeout: "20m"
+ upstreamTimeout: "15m" 
+
+queueWorker:
+  ackWait: "15m"
+
