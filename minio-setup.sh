@@ -5,3 +5,4 @@ mc --insecure admin user add  minio-tenant ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACC
 mc --insecure admin policy set minio-tenant readwrite user=${AWS_ACCESS_KEY_ID}
 
 mc --insecure mb -p minio-tenant/my-bucket
+mc --insecure mb policy set public minio-tenant/my-bucket
