@@ -41,4 +41,11 @@ releases:
           - "apply"
           - "-k"
           - "kustomize/minio-tenant/base"
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-k"
+          - "kustomize/minio-tenant/postinstall"
 

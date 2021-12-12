@@ -8,3 +8,6 @@ gateway:
 queueWorker:
   ackWait: "15m"
 
+faasnetes:
+  writeTimeout: "20m"
+  readTimeout: "20m"
