@@ -9,5 +9,33 @@ also create openfaas-fn namespace.
 Install [metrics-server](https://github.com/kubernetes-sigs/metrics-server) in the kube-system namespace.
 Metrics-server is used for [auto-scaling](https://docs.openfaas.com/tutorials/kubernetes-hpa/)
 
+# Demo Script
 
-
+- Create the KinD Cluster: ```make kind-registry```
+- Install: ```make install```
+- Set environment:
+	```
+	export OPENFAAS_PASSWORD=$(echo $(kubectl -n openfaas get secret basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode))
+	export AWS_ACCESS_KEY_ID=$(openssl rand --base64 12 | tr '+/' '-_')
+	export AWS_SECRET_ACCESS_KEY=$(openssl rand --base64 12 | tr '+/' '-_')
+	```
+- Configure Minio:
+	```
+	make setup 
+	make upload
+	```
+- Login to Openfaas:
+	```
+	kubectl --namespace openfaas port-forward svc/gateway 8080:8080 &
+	faas-cli login --password $OPENFAAS_PASSWORD
+	```
+- Install functions:
+	```
+	make stack
+	```
+- Run processing script:
+	```
+	make Phantasmagoria
+	```
+- To see the result open [the player](https://reference.dashif.org/dash.js/v4.2.0/samples/dash-if-reference-player/index.html)
+  and use `http://localhost/my-bucket/bentoed/stream.mpd` as content url

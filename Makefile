@@ -19,9 +19,11 @@ kind-registry:
 	kubectl wait --namespace kube-system --for=condition=ready pod --selector=k8s-app=kube-dns --timeout=240s
 	kubectl apply -f \
 		https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+	kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
 
 install:
 	helmfile -f magiclantern/helmfile.yaml sync
+	kubectl wait --namespace openfaas --for=condition=ready pod --selector=app=gateway --timeout=120
 
 .minio-forward:
 	@kubectl --namespace minio-tenant port-forward --address 0.0.0.0 svc/minio-hl 9000:9000 & echo $$! > .minio-forward
@@ -53,12 +55,13 @@ Zoethrope:
 	git clone https://github.com/Kynothon/Zoethrope.git
 
 
-stack:
+stack: Zoethrope
 	cd Zoethrope && faas-cli template pull https://github.com/Kynothon/kynothon-openfaas-template.git 
 	cd Zoethrope && faas-cli up \
 		--env AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) \
 		--env AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) \
 		-f stack.yml
+	kubectl wait --namespace openfaas-fn --for=condition=ready pod --selector=faas_function=bento4 --timeout=120s
 
 
 Phantasmagoria:
