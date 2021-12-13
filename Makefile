@@ -23,7 +23,7 @@ kind-registry:
 
 install:
 	helmfile -f magiclantern/helmfile.yaml sync
-	kubectl wait --namespace openfaas --for=condition=ready pod --selector=app=gateway --timeout=120
+	kubectl wait --namespace openfaas --for=condition=ready pod --selector=app=gateway --timeout=600s
 
 .minio-forward:
 	@kubectl --namespace minio-tenant port-forward --address 0.0.0.0 svc/minio-hl 9000:9000 & echo $$! > .minio-forward
