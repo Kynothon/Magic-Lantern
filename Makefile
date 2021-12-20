@@ -21,6 +21,9 @@ kind-registry:
 		https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 	kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
 
+teardown: unkind
+	docker stop kind-registry
+
 install:
 	helmfile -f magiclantern/helmfile.yaml sync
 	kubectl wait --namespace openfaas --for=condition=ready pod --selector=app=gateway --timeout=600s
