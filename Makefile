@@ -23,6 +23,7 @@ kind-registry:
 
 teardown: unkind
 	docker stop kind-registry
+	docker rm kind-registry
 
 install:
 	helmfile -f magiclantern/helmfile.yaml sync
