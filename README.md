@@ -11,6 +11,8 @@ Metrics-server is used for [auto-scaling](https://docs.openfaas.com/tutorials/ku
 
 # Demo Script
 
+A try of an implementation of [High Quality Video Encoding at Scale](https://netflixtechblog.com/high-quality-video-encoding-at-scale-d159db052746) using Kubernetes, GStreamer, Bento4 and shell scripts a lot of scripts.
+
 - Create the KinD Cluster: ```make kind-registry```
 - Install: ```make install```
 - Set environment:
