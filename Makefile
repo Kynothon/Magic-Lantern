@@ -69,5 +69,5 @@ stack: Zoethrope
 
 
 Phantasmagoria:
-	sh ./Phantasmagoria.sh
+	bash ./Phantasmagoria.sh
 
