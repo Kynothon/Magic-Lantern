@@ -4,6 +4,11 @@ K3S_RELEASE_CHANNEL?=latest
 MINIO_TENANT:=minio
 K3D_REGISTRY:=k3d-registry.localhost:5000
 KIND_REGISTRY:=localhost:5000
+ifeq (k3d-k3s, $(KUBECONTEXT))
+ENVIRONMENT:=k3s
+else
+ENVIRONMENT?=default
+endif
 
 all: kind-registry install setup
 
@@ -57,8 +62,7 @@ teardown:
 	make $(KUBE_CONTEXT)-teardown
 
 install:
-	$(eval $(if $(filter k3d-k3s,$(KUBE_CONTEXT)), enable_k3s="-l name=k3s", enable_k3s=""))
-	helmfile -l name=k3s -f magiclantern/helmfile.yaml sync
+	helmfile -e $(ENVIRONMENT) --kube-context $(KUBE_CONTEXT) -f magiclantern/helmfile.yaml sync
 	kubectl --context $(KUBE_CONTEXT) wait --namespace openfaas --for=condition=ready pod --selector=app=gateway --timeout=600s
 
 minio: storage_class = $(shell kubectl --context $(KUBE_CONTEXT) get storageClass -o json | jq -r '.items[0].metadata.name')

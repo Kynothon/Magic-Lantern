@@ -23,13 +23,15 @@ helmfile [global options] sync
 ## Options
 ### Global options
 
-- `--environment value`, `-e value` value must be in [`k3s`, `default`]. defaults to default 
+- `--environment value`, `-e value`	Specify the environment name, value must be in [`k3s`, `default`]. defaults to default 
+- `--kube-context value` 		Set kubectl context. Uses current context by default
 
 # Local Demo Script
 
 A try of an implementation of [High Quality Video Encoding at Scale](https://netflixtechblog.com/high-quality-video-encoding-at-scale-d159db052746) using Kubernetes, GStreamer, Bento4 and shell scripts a lot of scripts.
 
-- Select the Context to use: `KUBE_CONTEXT=context` use `kind-kind` for KinD cluster or use `k3d-k3s` for K3D cluster (default)
+- Select the context to use: `KUBE_CONTEXT=context` if creating use `kind-kind` for KinD cluster or use `k3d-k3s` for K3D cluster (default)
+- Select the environement to use: `ENVIRONMENT=env` use default for Kubernetes cluster or `k3s` for k3s based cluster. 
 - Create the KinD Cluster: `make cluster+registry` or the K3S Cluster: `make cluster+registry`
 - Install: `make install`
 - Set environment:
