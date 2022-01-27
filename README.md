@@ -9,12 +9,29 @@ also create openfaas-fn namespace.
 Install [metrics-server](https://github.com/kubernetes-sigs/metrics-server) in the kube-system namespace.
 Metrics-server is used for [auto-scaling](https://docs.openfaas.com/tutorials/kubernetes-hpa/)
 
-# Demo Script
+
+# Install on Kubernetes cluster
+
+```
+helmfile [global options] sync
+```
+
+## Environment variables
+
+- `K3S_RELEASE_CHANNEL=[stable|latest]` [Doc](https://rancher.com/docs/k3s/latest/en/upgrades/basic/#release-channels)
+
+## Options
+### Global options
+
+- `--environment value`, `-e value` value must be in [`k3s`, `default`]. defaults to default 
+
+# Local Demo Script
 
 A try of an implementation of [High Quality Video Encoding at Scale](https://netflixtechblog.com/high-quality-video-encoding-at-scale-d159db052746) using Kubernetes, GStreamer, Bento4 and shell scripts a lot of scripts.
 
-- Create the KinD Cluster: ```make kind-registry```
-- Install: ```make install```
+- Select the Context to use: `KUBE_CONTEXT=context` use `kind-kind` for KinD cluster or use `k3d-k3s` for K3D cluster (default)
+- Create the KinD Cluster: `make cluster+registry` or the K3S Cluster: `make cluster+registry`
+- Install: `make install`
 - Set environment:
 	```
 	export OPENFAAS_PASSWORD=$(echo $(kubectl -n openfaas get secret basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode))
@@ -23,13 +40,13 @@ A try of an implementation of [High Quality Video Encoding at Scale](https://net
 	```
 - Configure Minio:
 	```
-	make setup 
+	make minio
+	make bucket
 	make upload
 	```
 - Login to Openfaas:
 	```
-	kubectl --namespace openfaas port-forward svc/gateway 8080:8080 &
-	faas-cli login --password $OPENFAAS_PASSWORD
+	make openfaas
 	```
 - Install functions:
 	```

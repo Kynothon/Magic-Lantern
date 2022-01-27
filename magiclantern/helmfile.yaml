@@ -1,16 +1,30 @@
 repositories:
   - name: "faas-netes"
     url: "https://openfaas.github.io/faas-netes"
-  - name: "metrics-server"
-    url: "https://kubernetes-sigs.github.io/metrics-server"
   - name: "minio"
     url: "https://operator.min.io"
+  - name: "rancher"
+    url: "https://charts.rancher.io"
+
+environments:
+  default:
+    values:
+      - k3s:
+          enabled: false
+  k3s:
+    values:
+      - k3s:
+          enabled: true
+
+
+
 
 releases:
   - name: "openfaas"
+    chart: "faas-netes/openfaas"
     namespace: "openfaas"
     createNamespace: true
-    chart: "faas-netes/openfaas"
+    version: 9.0.2
     values:
       - "./values/openfaas.yaml"
     hooks:
@@ -22,30 +36,21 @@ releases:
           - "-k"
           - "kustomize/openfaas/base"
 
-  - name: "metrics-server"
-    namespace: "kube-system"
-    chart: "metrics-server/metrics-server"
-    values:
-      - "./values/metrics-server.yaml"
-
-  - name: "minio"
+  - name: "minio-operator"
+    chart: "minio/operator"
     namespace: "minio-operator"
-    chart: "minio/minio-operator"
-    values:
-      - "./values/minio-tenant.yaml"
-    hooks:
-      - events: ["prepare"]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-k"
-          - "kustomize/minio-tenant/base"
-      - events: ["postsync"]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-k"
-          - "kustomize/minio-tenant/postinstall"
+    version: "4.4.3"
 
+  - name: "k3s-upgrader"
+    chart: "rancher/system-upgrade-controller"
+    condition: k3s.enabled
+    namespace: "cattle-system"
+    hooks:
+      - events:
+          - postsync
+        showlogs: false
+        command: "kubectl"
+        args:
+          - apply
+          - -k
+          - kustomize/k3s/postsync/overlays/{{ env "K3S_CHANNEL" | default "stable" }}
