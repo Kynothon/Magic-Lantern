@@ -1,0 +1,20 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: cors
+  namespace: minio 
+spec:
+  headers:
+    accessControlAllowHeaders:
+      - '*'
+    accessControlAllowMethods:
+      - '*'
+    accessControlAllowOriginList:
+      - '*'
+    accessControlAllowCredentials: true
+    accessControlMaxAge: 100
+    addVaryHeader: true
+    customResponseHeaders:
+      Content-Security-Policy: ""
+      Strict-Transport-Security: ""
+

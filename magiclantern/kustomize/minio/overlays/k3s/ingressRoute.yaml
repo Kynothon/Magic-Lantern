@@ -1,0 +1,32 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`minio.localhost`)
+    priority: 10
+    middlewares:
+      - name: cors
+    services:
+    - kind: Service
+      name: minio
+      namespace: minio
+      passHostHeader: true
+      port: 443
+      responseForwarding:
+        flushInterval: 1ms
+      scheme: https
+      serversTransport: minio   # [10]
+      sticky:
+        cookie:
+          httpOnly: true
+          name: cookie
+          secure: true
+          sameSite: none
+      strategy: RoundRobin
+      weight: 10

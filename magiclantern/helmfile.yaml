@@ -16,9 +16,6 @@ environments:
       - k3s:
           enabled: true
 
-
-
-
 releases:
   - name: "openfaas"
     chart: "faas-netes/openfaas"
@@ -36,10 +33,18 @@ releases:
           - "-k"
           - "kustomize/openfaas/base"
 
-  - name: "minio-operator"
+  - name: "minio"
     chart: "minio/operator"
     namespace: "minio-operator"
     version: "4.4.3"
+    hooks:
+      - events:
+          - postsync
+        showlogs: false 
+        command: "sh"
+        args:
+          - -c 
+          - kustomize build kustomize/minio/overlays/{{ .Environment.Name }} | sed -e "s@\${ROOT_CA_SECRET}@$(kubectl get secrets --field-selector type=kubernetes.io/service-account-token -n minio -o=jsonpath='{.items[0].metadata.name}')@" | kubectl apply -f -
 
   - name: "k3s-upgrader"
     chart: "rancher/system-upgrade-controller"

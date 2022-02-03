@@ -1,0 +1,11 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: minio
+  namespace: minio
+
+spec:
+  serverName: minio.minio.svc.cluster.local
+  insecureSkipVerify: false
+  rootCAsSecrets:
+    - ${ROOT_CA_SECRET}

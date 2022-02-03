@@ -9,6 +9,12 @@ also create openfaas-fn namespace.
 Install [metrics-server](https://github.com/kubernetes-sigs/metrics-server) in the kube-system namespace.
 Metrics-server is used for [auto-scaling](https://docs.openfaas.com/tutorials/kubernetes-hpa/)
 
+## Tooling
+
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/)
+- [Helmfile](https://github.com/roboll/helmfile)
+- [Minio Kubernetes Plugin](https://docs.min.io/minio/k8s/reference/minio-kubectl-plugin.html)
 
 # Install on Kubernetes cluster
 
@@ -25,6 +31,20 @@ helmfile [global options] sync
 
 - `--environment value`, `-e value`	Specify the environment name, value must be in [`k3s`, `default`]. defaults to default 
 - `--kube-context value` 		Set kubectl context. Uses current context by default
+
+
+# Setup Minio storage
+
+```
+minio tenant create <TENANTNAME> --servers <NSERVERS> --volumes <NVOLUMES> --capacity <SIZE> --namespace <TENANTNS> --storage-class <STORAGECLASS>
+```
+
+## Options
+- `--capacity string`           Total raw capacity of MinIO tenant in this pool, e.g. 16Ti
+- `--namespace string`		K8s namespace for this MinIO tenant. Must exist before executing the command
+- `--servers int32` 		Total number of pods in MinIO tenant (1 for single-host or 4+ for HA)
+- `--storage-class string`	Storage class for this MinIO tenant
+- `--volumes int32`             Total number of volumes in the MinIO tenant
 
 # Local Demo Script
 

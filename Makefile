@@ -38,7 +38,7 @@ kind-kind-registry:
 
 k3d-k3s-registry:
 	k3d registry create registry.localhost --port 5000
-	k3d cluster create --registry-use k3d-registry.localhost:5000 -p "80:80@loadbalancer" -p "443:8443@loadbalancer"  --wait --timeout 240s --image rancher/k3s:v1.23.2-k3s1 k3s 
+	k3d cluster create --registry-use k3d-registry.localhost:5000 -p "80:80@loadbalancer" -p "443:443@loadbalancer"  --wait --timeout 240s --image rancher/k3s:v1.23.2-k3s1 k3s 
 
 kind-registry: kind-kind-registry
 k3d-registry: k3d-k3s-registry
